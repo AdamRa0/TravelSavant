@@ -3,13 +3,17 @@ import CountryItem from "./CountryItem";
 import Message from "./Message";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
+import useCities from "../hooks/useCities";
 
 CountryList.propTypes = {
   cities: PropTypes.arrayOf(PropTypes.object),
   isLoading: PropTypes.bool,
 };
 
-export default function CountryList({ cities, isLoading }) {
+export default function CountryList() {
+
+  const { cities, isLoading } = useCities();
+
   if (isLoading) return <Spinner />;
 
   if (!cities.length)

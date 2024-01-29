@@ -1,3 +1,4 @@
+import useCities from "../hooks/useCities";
 import CityItem from "./CityItem";
 import styles from "./CityList.module.css";
 import Message from "./Message";
@@ -9,7 +10,9 @@ CityList.propTypes = {
   isLoading: PropTypes.bool,
 };
 
-export default function CityList({ cities, isLoading }) {
+export default function CityList() {
+  const { cities, isLoading } = useCities();
+
   if (isLoading) return <Spinner />;
 
   if (!cities.length)
