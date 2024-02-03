@@ -11,9 +11,11 @@ import PropTypes from "prop-types";
 import styles from "./Map.module.css";
 import { useEffect, useState } from "react";
 import useCities from "../hooks/useCities";
+import useGeoLocation from "../hooks/useGeoLocation";
+import Button from "../components/Button";
 
 ChangeCenter.propTypes = {
-  position: PropTypes.arrayOf(PropTypes.number),
+  position: PropTypes.arrayOf(PropTypes.string),
 };
 
 function ChangeCenter({ position }) {
@@ -38,6 +40,12 @@ export default function Map() {
 
   const [searchParams] = useSearchParams();
 
+  const {
+    isLoading: isLoadingPosition,
+    position: geoLocationPosition,
+    getPosition,
+  } = useGeoLocation();
+
   const lat = searchParams.get("lat");
   const lng = searchParams.get("lng");
 
@@ -48,8 +56,19 @@ export default function Map() {
     [lat, lng]
   );
 
+  useEffect(
+    function () {
+      if (geoLocationPosition)
+        setMapPosition([geoLocationPosition.lat, geoLocationPosition.lng]);
+    },
+    [geoLocationPosition]
+  );
+
   return (
     <div className={styles.mapContainer}>
+      <Button type="position" onClick={getPosition}>
+        {isLoadingPosition ? "Loading..." : "Use your position"}
+      </Button>
       <MapContainer
         center={mapPosition}
         zoom={6}
