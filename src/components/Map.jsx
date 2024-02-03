@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   MapContainer,
   TileLayer,
@@ -13,9 +13,13 @@ import { useEffect, useState } from "react";
 import useCities from "../hooks/useCities";
 import useGeoLocation from "../hooks/useGeoLocation";
 import Button from "../components/Button";
+import useUrlPos from "../hooks/useUrlPos";
 
 ChangeCenter.propTypes = {
-  position: PropTypes.arrayOf(PropTypes.string),
+  position: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.number),
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
 };
 
 function ChangeCenter({ position }) {
@@ -38,16 +42,13 @@ export default function Map() {
 
   const [mapPosition, setMapPosition] = useState([-4.322222, 39.575001]);
 
-  const [searchParams] = useSearchParams();
-
   const {
     isLoading: isLoadingPosition,
     position: geoLocationPosition,
     getPosition,
   } = useGeoLocation();
 
-  const lat = searchParams.get("lat");
-  const lng = searchParams.get("lng");
+  const [lat, lng] = useUrlPos();
 
   useEffect(
     function () {
