@@ -59,7 +59,7 @@ CitiesProvider.propTypes = {
   ]),
 };
 
-export function CitiesProvider({ children }) {
+export default function CitiesProvider({ children }) {
 
   const [{ cities, isLoading, currentCity }, dispatch] = useReducer(
     reducer,
