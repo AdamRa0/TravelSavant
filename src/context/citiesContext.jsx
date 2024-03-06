@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useCallback, useEffect, useReducer } from "react";
 import PropTypes from "prop-types";
 
 export const CitiesContext = createContext();
@@ -39,7 +39,7 @@ function reducer(state, action) {
         ...state,
         isLoading: false,
         cities: state.cities.filter((city) => city.id !== action.payload),
-        currentCity: {}
+        currentCity: {},
       };
     case "rejected":
       return {
@@ -60,7 +60,6 @@ CitiesProvider.propTypes = {
 };
 
 export default function CitiesProvider({ children }) {
-
   const [{ cities, isLoading, currentCity }, dispatch] = useReducer(
     reducer,
     initialState
@@ -84,7 +83,7 @@ export default function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
-  async function getCity(id) {
+  const getCity = useCallback(async function getCity(id) {
     if (Number(id) === currentCity.id) return;
 
     dispatch({ type: "loading" });
@@ -99,7 +98,7 @@ export default function CitiesProvider({ children }) {
         payload: "There was an error fetching the city",
       });
     }
-  }
+  }, [currentCity.id]);
 
   async function createCity(city) {
     dispatch({ type: "loading" });
